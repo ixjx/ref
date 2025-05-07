@@ -19,7 +19,7 @@ jobs:
 
       - name: ♻️ 编译静态文件
         run: |
-          echo -e 'REF_URL=https://ixjx.github.io/\nREF_LABEL=ixjx' > .env
+          echo -e 'REF_URL=https://ixjx.github.io/\nREF_LABEL=CodeShurrik\nLICENSE=© 2022 <a href="https://ixjx.github.io/" target="_blank">CodeShurrik™</a>' > .env
           npm install
           npm run build
 
