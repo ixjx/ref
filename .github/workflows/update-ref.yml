@@ -1,7 +1,7 @@
-name: 每8个小时更新一次reference
+name: 每12小时更新一次reference
 on:
   schedule:
-    - cron: '59 */8 * * *' # 定时任务
+    - cron: '30 */12 * * *' # 定时任务
   workflow_dispatch:       # 手动运行
 
 env: # 设置环境变量
@@ -19,7 +19,7 @@ jobs:
 
       - name: ♻️ 编译静态文件
         run: |
-          echo -e 'REF_URL=https://ixjx.github.io/\nREF_LABEL=CodeShurrik\nLICENSE=© 2022 <a href="https://ixjx.github.io/" target="_blank">CodeShurrik™</a>' > .env
+          echo -e 'REF_URL=https://ixjx.github.io/\nREF_LABEL=Shurrik\nLICENSE=© 2022 <a href="https://ixjx.github.io/" target="_blank">Shurrik™</a>' > .env
           npm install
           npm run build
 
