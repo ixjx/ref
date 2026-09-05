@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en" data-color-mode="dark">
+<head>
+<meta charset="utf-8">
+<title>PM2 备忘清单
+ &#x26;  pm2 cheatsheet &#x26;  Quick Reference</title>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta description="PM2PM2 是 Node.js / Bun 应用常用的生产进程管理器，提供守护进程、自动重启、日志、监控、集群模式、开机自启和配置文件管理能力。它也可以启动脚本、Python 程序或二进制文件。
+
+
+入门，为开发人员分享快速参考备忘单。">
+<meta keywords="pm2,reference,Quick,Reference,cheatsheet,cheat,sheet">
+<meta name="author" content="jaywcjlove">
+<meta name="license" content="MIT">
+<meta name="funding" content="https://jaywcjlove.github.io/#/sponsor">
+<meta rel="apple-touch-icon" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="152x152" href="../icons/touch-icon-ipad.png">
+<meta rel="apple-touch-icon" sizes="180x180" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="167x167" href="../icons/touch-icon-ipad-retina.png">
+<meta rel="apple-touch-icon" sizes="120x120" href="../icons/touch-icon-iphone-retina.png">
+<link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+<link href="../style/style.css" rel="stylesheet">
+<link href="../style/katex.css" rel="stylesheet">
+</head>
+<body><nav class="header-nav"><div class="max-container"><a href="../index.html" class="logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em">
+  <path d="m21.66 10.44-.98 4.18c-.84 3.61-2.5 5.07-5.62 4.77-.5-.04-1.04-.13-1.62-.27l-1.68-.4c-4.17-.99-5.46-3.05-4.48-7.23l.98-4.19c.2-.85.44-1.59.74-2.2 1.17-2.42 3.16-3.07 6.5-2.28l1.67.39c4.19.98 5.47 3.05 4.49 7.23Z" fill="#c9d1d9"></path>
+  <path d="M15.06 19.39c-.62.42-1.4.77-2.35 1.08l-1.58.52c-3.97 1.28-6.06.21-7.35-3.76L2.5 13.28c-1.28-3.97-.22-6.07 3.75-7.35l1.58-.52c.41-.13.8-.24 1.17-.31-.3.61-.54 1.35-.74 2.2l-.98 4.19c-.98 4.18.31 6.24 4.48 7.23l1.68.4c.58.14 1.12.23 1.62.27Zm2.43-8.88c-.06 0-.12-.01-.19-.02l-4.85-1.23a.75.75 0 0 1 .37-1.45l4.85 1.23a.748.748 0 0 1-.18 1.47Z" fill="#228e6c"></path>
+  <path d="M14.56 13.89c-.06 0-.12-.01-.19-.02l-2.91-.74a.75.75 0 0 1 .37-1.45l2.91.74c.4.1.64.51.54.91-.08.34-.38.56-.72.56Z" fill="#228e6c"></path>
+</svg>
+<span class="title">Quick Reference</span></a><div class="menu"><a href="javascript:void(0);" class="searchbtn" id="searchbtn"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><span>搜索</span><span>⌘K</span></a><a href="https://ixjx.github.io/" class="home" target="__blank"><svg viewBox="0 0 24 24" fill="currentColor" height="1em" width="1em"><path d="M12.74 2.32a1 1 0 0 0-1.48 0l-9 10A1 1 0 0 0 3 14h2v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7h2a1 1 0 0 0 1-1 1 1 0 0 0-.26-.68z"></path></svg><span>Shurrik</span></a><a href="https://github.com/jaywcjlove/reference/blob/main/docs/pm2.md" class="edit" target="__blank"><svg viewBox="0 0 36 36" fill="currentColor" height="1em" width="1em"><path d="m33 6.4-3.7-3.7a1.71 1.71 0 0 0-2.36 0L23.65 6H6a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V11.76l3-3a1.67 1.67 0 0 0 0-2.36ZM18.83 20.13l-4.19.93 1-4.15 9.55-9.57 3.23 3.23ZM29.5 9.43 26.27 6.2l1.85-1.85 3.23 3.23Z"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span>编辑</span></a><button id="darkMode" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="light" height="1em" width="1em">
+  <path d="M6.995 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007-2.246-5.007-5.007-5.007S6.995 9.239 6.995 12zM11 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2H2zm17 0h3v2h-3zM5.637 19.778l-1.414-1.414 2.121-2.121 1.414 1.414zM16.242 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.344 7.759 4.223 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"></path>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="dark" height="1em" width="1em">
+  <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"></path>
+</svg>
+</button><script src="../js/dark.js?v=1.11.1"></script><a href="https://github.com/jaywcjlove/reference" class="" target="__blank"><svg viewBox="0 0 16 16" fill="currentColor" height="1em" width="1em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></nav><div class="wrap h1body-exist max-container"><header class="wrap-header h1wrap"><h1 id="pm2-备忘清单"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1em" width="1em">
+  <path d="M10.43 3.223c-.83 1.386-.906 1.499-1.21 1.81-.633.654-1.417 1.003-2.415 1.074-.187.013-1.265.033-2.702.05-.638.008-.75.011-.766.028-.01.011-.185.274-.39.586l-.37.565.104.005c.056.003.443-.003.858-.011a93.159 93.163 0 0 1 1.335-.019c.572 0 .58 0 .667.03.246.084.393.306.355.533a.504.504 0 0 1-.394.42c-.104.027-.375.034-2.821.075-.426.007-.78.015-.784.02a30.5 30.5 0 0 0-.747 1.145c.004.004.405 0 .893-.007 3.13-.051 5.844-.092 6.6-.1.727-.008.995-.02 1.19-.054.54-.092.954-.297 1.31-.65.253-.252.475-.572.852-1.23.125-.217.262-.45.307-.52l.138-.223c.033-.054.07-.11.082-.125.033-.038.1-.146.14-.23.034-.07.534-.906.75-1.257.15-.242.232-.312.42-.355.26-.06.58.102.653.332.06.188.033.305-.136.59-1.21 2.035-1.65 2.764-1.887 3.123-.672 1.018-1.684 1.564-2.991 1.613-.105.003-.773.015-1.486.026l-2.052.031-1.591.027a1166.545 1166.596 0 0 1-3.102.048c-.502.005-.761.013-.78.022a.723.723 0 0 0-.12.186 2.87 2.87 0 0 0-.285.793.427.427 0 0 1-.039.132c-.024.007-.02.787.003.81a.41.41 0 0 1 .04.135c.057.285.197.616.395.932l.092.147 1.316.008c.724.004 2.597.015 4.164.021 1.692.008 2.914.019 3.01.027.318.026.488.052.75.118a3.374 3.374 0 0 1 1.652.95c.255.264.38.44.941 1.339a188.3 188.3 0 0 1 1.494 2.44c.142.28.05.571-.223.7a.588.588 0 0 1-.518.01c-.145-.072-.152-.08-.9-1.29a85.42 85.42 0 0 0-.512-.822 26.09 26.091 0 0 1-.344-.565c-.37-.62-.588-.93-.82-1.162a2.367 2.367 0 0 0-1.164-.627c-.286-.064-.338-.066-2.328-.077a590.763 590.789 0 0 0-3.215-.014c-.738 0-1.634-.005-1.99-.008-.517-.008-.647-.007-.647.007 0 .008.156.27.348.578l.348.56.332.003c2.407.019 2.53.02 2.619.037.194.04.309.123.386.28a.35.35 0 0 1 .05.212.43.43 0 0 1-.143.342.568.568 0 0 1-.251.142c-.075.022-.142.024-1.214.02-.92-.003-1.134 0-1.126.013a93.7 93.7 0 0 0 .704 1.135c.008.007.592.016 1.508.021 1.23.008 1.527.013 1.673.03 1.105.13 1.942.603 2.573 1.457.117.158.248.366.912 1.44l.466.754h.714c.392 0 .714-.003.714-.007s-.257-.42-.57-.924a493.191 493.213 0 0 1-1.49-2.407 12.643 12.644 0 0 0-.274-.43 2.395 2.395 0 0 0-1.434-.97c-.252-.061-.428-.077-.874-.083-.446-.006-.522-.016-.646-.08a.552.552 0 0 1-.231-.227c-.033-.065-.037-.088-.037-.211 0-.127.003-.145.037-.208a.557.557 0 0 1 .357-.275c.07-.021.13-.024.52-.024.345 0 .48.005.625.024.937.12 1.64.445 2.224 1.027.276.276.397.443.758 1.042.127.209.412.672.636 1.028l1.05 1.686.644 1.04h.905c.722 0 .905-.005.9-.018a23.922 23.923 0 0 0-.24-.39c-.46-.737-.493-.796-.513-.943-.027-.206.118-.419.345-.5a.548.548 0 0 1 .6.134c.064.063.414.61.936 1.465l.156.255.178-.009a3.32 3.32 0 0 0 1.31-.325c.065-.03.125-.056.134-.059a3.149 3.149 0 0 0 1.078-.886 541.326 541.35 0 0 0 2.393-3.65c2.484-3.806 2.433-3.724 2.554-4.086a2.682 2.682 0 0 0-.115-2.016c-.048-.103-.838-1.387-2.263-3.683a536.842 536.866 0 0 0-2.253-3.617 2.936 2.936 0 0 0-1.1-.915 3.19 3.191 0 0 0-.902-.316c-.18-.033-.193-.036-.183-.052.004-.008-.106-.01-.292-.01l-.298.005-.265.44c-.588.98-.643 1.068-.726 1.151a.568.568 0 0 1-.309.169c-.222.04-.496-.093-.59-.287-.03-.057-.033-.084-.033-.204 0-.187-.009-.167.504-1.01a3.41 3.41 0 0 0 .147-.254c0-.007-.29-.012-.71-.012h-.71l-.019.03a441.636 441.636 0 0 1-1.829 3.028c-.21.347-.468.776-.57.953-.231.396-.326.54-.49.744a4.123 4.123 0 0 1-.563.56c-.53.411-1.17.66-1.92.747-.361.042-.884.048-1.072.013a.576.576 0 0 1-.384-.276c-.033-.065-.037-.083-.037-.21 0-.12.004-.147.034-.21a.542.542 0 0 1 .352-.279c.073-.02.16-.027.515-.037.264-.007.485-.02.578-.033a3.15 3.15 0 0 0 .599-.15c.164-.065.396-.19.532-.288a2.87 2.87 0 0 0 .53-.526c.056-.074.325-.509.599-.966.273-.458.8-1.334 1.171-1.947.37-.614.677-1.124.68-1.135.006-.016-.098-.018-.703-.018h-.708l-.622 1.035zm7.036.536c0 .01.005.02.012.022.005.001.101.149.212.327.506.81.692 1.117.72 1.194.036.1.04.231.008.323a.646.646 0 0 1-.24.262.543.543 0 0 1-.657-.088c-.08-.075-.165-.201-.46-.685-.11-.182-.214-.346-.229-.366-.016-.024-.022-.046-.016-.066.01-.031.56-.88.601-.925.027-.03.05-.03.05.003zM16.08 5.896c-.004.007 0 .013.005.016.012.004 1.003 1.593 1.574 2.523.48.778.696 1.127.88 1.413.301.469.413.687.526 1.026.115.342.16.653.147 1.005-.007.24-.03.39-.088.624-.102.4-.325.866-.61 1.278-.09.128-.273.322-.304.322-.01 0-.02.005-.02.012 0 .006-.039.025-.086.04a.633.633 0 0 1-.39-.012.661.661 0 0 1-.294-.283c-.032-.067-.034-.087-.029-.19.007-.14.036-.202.231-.503.25-.385.352-.596.424-.885.124-.49.063-.976-.184-1.46a36.64 36.64 0 0 0-.692-1.138 342.675 342.69 0 0 1-1.16-1.867c-.308-.496-.569-.918-.584-.938-.014-.021-.024-.045-.02-.054.01-.027.59-.907.62-.938.02-.022.03-.026.043-.016.01.008.015.02.01.026zm3.142.909a.59.59 0 0 1 .26.188c.095.117 1.425 2.23 1.911 3.04.28.462.41.75.5 1.103.062.243.086.431.086.689 0 .343-.037.57-.145.897-.126.382-.217.553-.658 1.236-.16.25-.998 1.548-1.858 2.887l-1.862 2.89c-.163.253-.303.47-.31.485-.008.013-.019.023-.027.02a20.635 20.636 0 0 1-.625-1.006c0-.009.012-.033.025-.052a8337.117 8337.482 0 0 1 3.846-5.967c.205-.318.266-.429.343-.62a1.95 1.95 0 0 0 .15-.84c-.014-.316-.077-.54-.254-.894-.13-.266-.255-.476-.562-.95-.125-.193-.269-.42-.319-.504a76.564 76.567 0 0 0-.486-.789c-.764-1.226-.755-1.21-.757-1.35 0-.118.04-.212.128-.307a.67.67 0 0 1 .32-.184.633.633 0 0 1 .294.027zm-4.54 1.215.2.325c1.091 1.747 1.137 1.824 1.247 2.043.461.919.465 1.832.014 2.735-.096.19-.135.255-.767 1.236-.848 1.32-.947 1.47-.974 1.5-.022.022-.025.024-.025.003 0-.012-.533-.881-1.184-1.93a193.219 193.227 0 0 1-1.184-1.918c0-.007.554-.858 1.233-1.892a612.753 612.78 0 0 0 1.314-2.007.706.706 0 0 1 .096-.127c.007 0 .02.014.03.033zm2.437 6.843a.675.675 0 0 1 .277.26.469.469 0 0 1 .041.153c.01.133-.024.21-.264.588a820.264 820.3 0 0 1-1.25 1.954l-.125.194c-.022.04-.026.042-.048.026a29.746 29.747 0 0 1-.605-.97c-.012-.03 1.237-1.975 1.327-2.068a.55.55 0 0 1 .446-.182.436.436 0 0 1 .201.045z"></path>
+</svg>
+<a aria-hidden="true" tabindex="-1" href="#pm2-备忘清单"><span class="icon icon-link"></span></a>PM2 备忘清单</h1><div class="wrap-body">
+<p><a href="https://npmjs.org/package/pm2"><img src="https://img.shields.io/npm/v/pm2.svg?style=flat" alt="NPM version"></a>
+<a href="https://www.npmjs.com/package/pm2"><img src="https://img.shields.io/npm/dm/pm2.svg?style=flat" alt="Downloads"></a></p>
+<p style="padding-top: 12px;"><a href="https://pm2.keymetrics.io/">PM2</a> 是 Node.js / Bun 应用常用的生产进程管理器，提供守护进程、自动重启、日志、监控、集群模式、开机自启和配置文件管理能力。它也可以启动脚本、Python 程序或二进制文件。</p>
+<!--rehype:style=padding-top: 12px;-->
+</div></header><div class="menu-tocs"><div class="menu-btn"><svg aria-hidden="true" fill="currentColor" height="1em" width="1em" viewBox="0 0 16 16" version="1.1" data-view-component="true">
+  <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+</svg></div><div class="menu-modal"><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#入门">入门</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#安装与版本">安装与版本</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#启动应用">启动应用</a><a aria-hidden="true" class="leve4 tocs-link" data-num="4" href="#示例">示例</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#进程操作">进程操作</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#日志与监控">日志与监控</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#日志">日志</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#监控">监控</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#集群与扩缩容">集群与扩缩容</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#cluster-模式">Cluster 模式</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#cluster-配置示例">Cluster 配置示例</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#配置文件">配置文件</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#ecosystemconfigjs">ecosystem.config.js</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#配置示例">配置示例</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#环境变量">环境变量</a><a aria-hidden="true" class="leve4 tocs-link" data-num="4" href="#示例-1">示例</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#重启策略">重启策略</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#常见策略">常见策略</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#配置字段">配置字段</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#持久化与开机自启">持久化与开机自启</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#启动脚本">启动脚本</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#常用流程">常用流程</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#部署后平滑更新">部署后平滑更新</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#单机快速启动-api">单机快速启动 API</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#清理不再需要的进程">清理不再需要的进程</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#常见排障">常见排障</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看异常原因">查看异常原因</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#参考资料">参考资料</a></div></div><div class="h1wrap-body"><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="入门"><a aria-hidden="true" tabindex="-1" href="#入门"><span class="icon icon-link"></span></a>入门</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="安装与版本"><a aria-hidden="true" tabindex="-1" href="#安装与版本"><span class="icon icon-link"></span></a>安装与版本</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>npm install pm2@latest -g</code></td><td>使用 npm 全局安装最新版</td></tr><tr><td align="left"><code>yarn global add pm2</code></td><td>使用 Yarn 全局安装</td></tr><tr><td align="left"><code>pm2 -v</code></td><td>查看 PM2 版本</td></tr><tr><td align="left"><code>pm2 update</code></td><td>更新内存中的 PM2 daemon</td></tr><tr><td align="left"><code>pm2 ping</code></td><td>检查 PM2 daemon 是否可用</td></tr><tr><td align="left"><code>pm2 kill</code></td><td>停止 PM2 daemon 和所有受管进程</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<p>升级全局包后执行 <code>pm2 update</code>，让正在运行的 daemon 使用新版本。</p>
+</div></div></div><div class="wrap h3body-exist col-span-2 row-span-2"><div class="wrap-header h3wrap"><h3 id="启动应用"><a aria-hidden="true" tabindex="-1" href="#启动应用"><span class="icon icon-link"></span></a>启动应用</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2 row-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 start app.js</code></td><td>启动 Node.js 应用</td></tr><tr><td align="left"><code>pm2 start app.js --name api</code></td><td>指定应用名称</td></tr><tr><td align="left"><code>pm2 start app.js --watch</code></td><td>文件变化时自动重启</td></tr><tr><td align="left"><code>pm2 start app.js --time</code></td><td>日志输出添加时间前缀</td></tr><tr><td align="left"><code>pm2 start app.js --no-autorestart</code></td><td>禁用自动重启</td></tr><tr><td align="left"><code>pm2 start app.js --max-memory-restart 300M</code></td><td>超过内存阈值后重启</td></tr><tr><td align="left"><code>pm2 start script.sh</code></td><td>启动 Shell 脚本</td></tr><tr><td align="left"><code>pm2 start worker.py --interpreter python3</code></td><td>指定解释器启动脚本</td></tr><tr><td align="left"><code>pm2 start app.js -- --port 3000</code></td><td><code>--</code> 后参数传给应用</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<h4 id="示例"><a aria-hidden="true" tabindex="-1" href="#示例"><span class="icon icon-link"></span></a>示例</h4>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ pm2 start app.js <span class="token parameter variable">--name</span> api <span class="token parameter variable">--time</span>
+</span><span class="code-line">$ pm2 start server.js <span class="token parameter variable">--watch</span> --ignore-watch<span class="token operator">=</span><span class="token string">"node_modules logs"</span>
+</span><span class="code-line">$ pm2 start app.js -- <span class="token parameter variable">--port</span> <span class="token number">3000</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="进程操作"><a aria-hidden="true" tabindex="-1" href="#进程操作"><span class="icon icon-link"></span></a>进程操作</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 list</code> | <code>pm2 ls</code> | <code>pm2 status</code></td><td>列出受管进程</td></tr><tr><td align="left">`pm2 restart &#x3C;name</td><td>id</td></tr><tr><td align="left">`pm2 reload &#x3C;name</td><td>id</td></tr><tr><td align="left">`pm2 stop &#x3C;name</td><td>id</td></tr><tr><td align="left">`pm2 delete &#x3C;name</td><td>id</td></tr><tr><td align="left">`pm2 describe &#x3C;name</td><td>id>`</td></tr><tr><td align="left">`pm2 reset &#x3C;name</td><td>id</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<p><code>reload</code> 与 <code>restart</code> 不同：<code>reload</code> 会尝试平滑替换进程；若超时或不适用，PM2 会回退到普通重启。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="日志与监控"><a aria-hidden="true" tabindex="-1" href="#日志与监控"><span class="icon icon-link"></span></a>日志与监控</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="日志"><a aria-hidden="true" tabindex="-1" href="#日志"><span class="icon icon-link"></span></a>日志</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 logs</code></td><td>实时查看所有进程日志</td></tr><tr><td align="left"><code>pm2 logs api</code></td><td>查看指定应用日志</td></tr><tr><td align="left"><code>pm2 logs --lines 200</code></td><td>输出最近 200 行后继续跟随</td></tr><tr><td align="left"><code>pm2 logs --nostream</code></td><td>只打印日志，不持续跟随</td></tr><tr><td align="left"><code>pm2 logs --json</code></td><td>以 JSON 格式输出日志</td></tr><tr><td align="left"><code>pm2 logs --err</code></td><td>只显示错误输出</td></tr><tr><td align="left"><code>pm2 logs --out</code></td><td>只显示标准输出</td></tr><tr><td align="left"><code>pm2 flush</code></td><td>清空所有日志</td></tr><tr><td align="left"><code>pm2 flush api</code></td><td>清空指定应用日志</td></tr><tr><td align="left"><code>pm2 reloadLogs</code></td><td>重新打开日志文件，常用于 logrotate 后</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<p>日志默认位于 <code>$HOME/.pm2/logs</code>。启动时可用 <code>--log</code>、<code>--output</code>、<code>--error</code>、<code>--time</code>、<code>--log-date-format</code>、<code>--merge-logs</code> 控制日志路径和格式。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="监控"><a aria-hidden="true" tabindex="-1" href="#监控"><span class="icon icon-link"></span></a>监控</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 monit</code></td><td>打开终端实时监控面板</td></tr><tr><td align="left"><code>pm2 show api</code></td><td>查看指定应用状态、日志路径、环境等信息</td></tr><tr><td align="left"><code>pm2 prettylist</code></td><td>以格式化 JSON 输出进程列表</td></tr><tr><td align="left"><code>pm2 jlist</code></td><td>输出原始 JSON 进程列表</td></tr><tr><td align="left"><code>pm2 report</code></td><td>生成诊断报告</td></tr><tr><td align="left"><code>pm2 plus</code></td><td>连接 PM2 Plus / PM2.io 在线监控</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="集群与扩缩容"><a aria-hidden="true" tabindex="-1" href="#集群与扩缩容"><span class="icon icon-link"></span></a>集群与扩缩容</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="cluster-模式"><a aria-hidden="true" tabindex="-1" href="#cluster-模式"><span class="icon icon-link"></span></a>Cluster 模式</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 start app.js -i max</code></td><td>根据可用 CPU 数启动实例</td></tr><tr><td align="left"><code>pm2 start app.js -i 0</code></td><td>与 <code>max</code> 类似，启动尽可能多实例</td></tr><tr><td align="left"><code>pm2 start app.js -i 4</code></td><td>启动 4 个实例</td></tr><tr><td align="left"><code>pm2 reload api</code></td><td>对应用做零停机 reload</td></tr><tr><td align="left"><code>pm2 scale api +2</code></td><td>增加 2 个实例</td></tr><tr><td align="left"><code>pm2 scale api 4</code></td><td>调整到总共 4 个实例</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<p>Cluster 模式适合监听 HTTP、TCP、UDP 等网络端口的 Node.js 应用。配置文件中需要显式设置 <code>exec_mode: "cluster"</code>，否则默认不会启用负载均衡。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="cluster-配置示例"><a aria-hidden="true" tabindex="-1" href="#cluster-配置示例"><span class="icon icon-link"></span></a>Cluster 配置示例</h3><div class="wrap-body">
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">apps</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"api"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">script</span><span class="token operator">:</span> <span class="token string">"./server.js"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">instances</span><span class="token operator">:</span> <span class="token string">"max"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">exec_mode</span><span class="token operator">:</span> <span class="token string">"cluster"</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="配置文件"><a aria-hidden="true" tabindex="-1" href="#配置文件"><span class="icon icon-link"></span></a>配置文件</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="ecosystemconfigjs"><a aria-hidden="true" tabindex="-1" href="#ecosystemconfigjs"><span class="icon icon-link"></span></a>ecosystem.config.js</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align wrap-text code-nowrap style-list"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 init simple</code></td><td>生成基础 <code>ecosystem.config.js</code></td></tr><tr><td align="left"><code>pm2 start ecosystem.config.js</code></td><td>启动配置文件中的应用</td></tr><tr><td align="left"><code>pm2 restart ecosystem.config.js</code></td><td>重启配置文件中的应用</td></tr><tr><td align="left"><code>pm2 reload ecosystem.config.js</code></td><td>reload 配置文件中的应用</td></tr><tr><td align="left"><code>pm2 stop ecosystem.config.js</code></td><td>停止配置文件中的应用</td></tr><tr><td align="left"><code>pm2 delete ecosystem.config.js</code></td><td>删除配置文件中的应用</td></tr><tr><td align="left"><code>pm2 start ecosystem.config.js --only api</code></td><td>只操作指定应用</td></tr><tr><td align="left"><code class="wrap-text">pm2 start ecosystem.config.js --env production</code><!--rehype:className=wrap-text--></td><td>使用 <code>env_production</code></td></tr></tbody></table>
+<!--rehype:className=left-align wrap-text code-nowrap style-list-->
+<p>配置文件建议以 <code>.config.js</code> 结尾，便于 PM2 识别。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="配置示例"><a aria-hidden="true" tabindex="-1" href="#配置示例"><span class="icon icon-link"></span></a>配置示例</h3><div class="wrap-body">
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">apps</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"api"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">script</span><span class="token operator">:</span> <span class="token string">"./server.js"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">instances</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">exec_mode</span><span class="token operator">:</span> <span class="token string">"cluster"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">watch</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">max_memory_restart</span><span class="token operator">:</span> <span class="token string">"300M"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">env</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token constant">NODE_ENV</span><span class="token operator">:</span> <span class="token string">"development"</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token constant">PORT</span><span class="token operator">:</span> <span class="token number">3000</span>
+</span><span class="code-line">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">env_production</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token constant">NODE_ENV</span><span class="token operator">:</span> <span class="token string">"production"</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token constant">PORT</span><span class="token operator">:</span> <span class="token number">8080</span>
+</span><span class="code-line">    <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"worker"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">script</span><span class="token operator">:</span> <span class="token string">"./worker.js"</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">autorestart</span><span class="token operator">:</span> <span class="token boolean">true</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+</div></div></div><div class="wrap h3body-exist"><div class="wrap-header h3wrap"><h3 id="环境变量"><a aria-hidden="true" tabindex="-1" href="#环境变量"><span class="icon icon-link"></span></a>环境变量</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>env</code></td><td>默认环境变量</td></tr><tr><td align="left"><code>env_production</code></td><td><code>--env production</code> 时注入</td></tr><tr><td align="left"><code>env_staging</code></td><td><code>--env staging</code> 时注入</td></tr><tr><td align="left"><code>NODE_APP_INSTANCE</code></td><td>PM2 为每个实例注入的实例编号</td></tr><tr><td align="left"><code>instance_var</code></td><td>重命名实例编号变量</td></tr><tr><td align="left"><code>increment_var</code></td><td>为每个实例递增某个环境变量</td></tr><tr><td align="left"><code>--update-env</code></td><td>重启时更新环境变量</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<h4 id="示例-1"><a aria-hidden="true" tabindex="-1" href="#示例-1"><span class="icon icon-link"></span></a>示例</h4>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ <span class="token assign-left variable">PORT</span><span class="token operator">=</span><span class="token number">4000</span> pm2 restart api --update-env
+</span><span class="code-line">$ pm2 start ecosystem.config.js <span class="token parameter variable">--env</span> production
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="重启策略"><a aria-hidden="true" tabindex="-1" href="#重启策略"><span class="icon icon-link"></span></a>重启策略</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="常见策略"><a aria-hidden="true" tabindex="-1" href="#常见策略"><span class="icon icon-link"></span></a>常见策略</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 start app.js --watch</code></td><td>文件变化时自动重启</td></tr><tr><td align="left"><code>pm2 stop app --watch</code></td><td>停止并禁用 watch 重启</td></tr><tr><td align="left"><code>pm2 restart app --watch</code></td><td>切换 watch 选项</td></tr><tr><td align="left"><code>pm2 start app.js --restart-delay=3000</code></td><td>自动重启前等待 3000ms</td></tr><tr><td align="left"><code>pm2 start app.js --cron-restart="0 0 * * *"</code></td><td>每天 0 点重启</td></tr><tr><td align="left"><code>pm2 restart app --cron-restart 0</code></td><td>禁用 cron 重启</td></tr><tr><td align="left"><code>pm2 start app.js --exp-backoff-restart-delay=100</code></td><td>使用指数退避重启</td></tr><tr><td align="left"><code>pm2 start app.js --stop-exit-codes 0</code></td><td>退出码为 0 时不自动重启</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<p>PM2 默认会在应用崩溃、退出或 Node.js 事件循环为空时尝试重启。重启策略可以在 CLI 中设置，也可以写入配置文件。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="配置字段"><a aria-hidden="true" tabindex="-1" href="#配置字段"><span class="icon icon-link"></span></a>配置字段</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>watch: true</code></td><td>启用文件监听</td></tr><tr><td align="left"><code>ignore_watch: ["node_modules"]</code></td><td>忽略监听目录</td></tr><tr><td align="left"><code>watch_delay: 1000</code></td><td>文件变化后延迟重启</td></tr><tr><td align="left"><code>max_memory_restart: "300M"</code></td><td>达到内存阈值后重启</td></tr><tr><td align="left"><code>restart_delay: 3000</code></td><td>重启延迟</td></tr><tr><td align="left"><code>cron_restart: "0 0 * * *"</code></td><td>cron 定时重启</td></tr><tr><td align="left"><code>autorestart: false</code></td><td>禁用自动重启</td></tr><tr><td align="left"><code>stop_exit_codes: [0]</code></td><td>指定退出码不触发重启</td></tr><tr><td align="left"><code>exp_backoff_restart_delay: 100</code></td><td>指数退避重启初始延迟</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="持久化与开机自启"><a aria-hidden="true" tabindex="-1" href="#持久化与开机自启"><span class="icon icon-link"></span></a>持久化与开机自启</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="启动脚本"><a aria-hidden="true" tabindex="-1" href="#启动脚本"><span class="icon icon-link"></span></a>启动脚本</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align code-nowrap"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left"><code>pm2 startup</code></td><td>生成当前平台的开机启动命令</td></tr><tr><td align="left"><code>pm2 startup systemd -u www --hp /home/www</code></td><td>指定 systemd 用户和家目录</td></tr><tr><td align="left"><code>pm2 save</code></td><td>保存当前进程列表，用于重启后恢复</td></tr><tr><td align="left"><code>pm2 resurrect</code></td><td>手动恢复上次保存的进程列表</td></tr><tr><td align="left"><code>pm2 unstartup</code></td><td>删除当前开机启动配置</td></tr><tr><td align="left"><code>systemctl status pm2-&#x3C;user></code></td><td>查看 systemd 服务状态</td></tr><tr><td align="left"><code>journalctl -u pm2-&#x3C;user></code></td><td>查看 systemd 启动日志</td></tr></tbody></table>
+<!--rehype:className=left-align code-nowrap-->
+<p>典型生产流程：</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ pm2 start ecosystem.config.js <span class="token parameter variable">--env</span> production
+</span><span class="code-line">$ pm2 save
+</span><span class="code-line">$ pm2 startup
+</span><span class="code-line"><span class="token comment"># 复制并执行 pm2 startup 输出的 sudo 命令</span>
+</span></code></pre>
+<p>升级 Node.js 后需要重新生成启动脚本，避免开机时仍使用旧 Node.js 路径。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="常用流程"><a aria-hidden="true" tabindex="-1" href="#常用流程"><span class="icon icon-link"></span></a>常用流程</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist col-span-2"><div class="wrap-header h3wrap"><h3 id="部署后平滑更新"><a aria-hidden="true" tabindex="-1" href="#部署后平滑更新"><span class="icon icon-link"></span></a>部署后平滑更新</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2-->
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ <span class="token function">git</span> pull
+</span><span class="code-line">$ <span class="token function">npm</span> ci
+</span><span class="code-line">$ <span class="token function">npm</span> run build
+</span><span class="code-line">$ pm2 reload ecosystem.config.js <span class="token parameter variable">--env</span> production
+</span><span class="code-line">$ pm2 save
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="单机快速启动-api"><a aria-hidden="true" tabindex="-1" href="#单机快速启动-api"><span class="icon icon-link"></span></a>单机快速启动 API</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-bash code-highlight"><span class="code-line">$ pm2 start server.js <span class="token parameter variable">--name</span> api <span class="token parameter variable">--time</span> --max-memory-restart 300M
+</span><span class="code-line">$ pm2 logs api <span class="token parameter variable">--lines</span> <span class="token number">100</span>
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="清理不再需要的进程"><a aria-hidden="true" tabindex="-1" href="#清理不再需要的进程"><span class="icon icon-link"></span></a>清理不再需要的进程</h3><div class="wrap-body">
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ pm2 stop old-api
+</span><span class="code-line">$ pm2 delete old-api
+</span><span class="code-line">$ pm2 save
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist col-span-2 row-span-2"><div class="wrap-header h3wrap"><h3 id="常见排障"><a aria-hidden="true" tabindex="-1" href="#常见排障"><span class="icon icon-link"></span></a>常见排障</h3><div class="wrap-body">
+<!--rehype:wrap-class=col-span-2 row-span-2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="left-align"><thead><tr><th align="left">:--</th><th>--</th></tr></thead><tbody><tr><td align="left">重启后进程丢失</td><td>启动或删除进程后忘记执行 <code>pm2 save</code></td></tr><tr><td align="left">开机自启使用旧 Node.js</td><td>Node.js 升级后重新执行 <code>pm2 unstartup</code> 和 <code>pm2 startup</code></td></tr><tr><td align="left">环境变量不更新</td><td>使用 <code>pm2 restart &#x3C;app> --update-env</code></td></tr><tr><td align="left">日志文件过大</td><td>使用 <code>pm2 flush</code>、<code>pm2 reloadLogs</code>，并配置外部 logrotate</td></tr><tr><td align="left">watch 停止后仍会重启</td><td>使用 <code>pm2 stop app --watch</code> 彻底关闭 watch</td></tr><tr><td align="left">Cluster 未负载均衡</td><td>配置文件里确认 <code>exec_mode: "cluster"</code></td></tr><tr><td align="left">reload 变成 restart</td><td>应用未能及时优雅退出，检查连接关闭与超时</td></tr></tbody></table>
+<!--rehype:className=left-align-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看异常原因"><a aria-hidden="true" tabindex="-1" href="#查看异常原因"><span class="icon icon-link"></span></a>查看异常原因</h3><div class="wrap-body">
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line">$ pm2 describe api
+</span><span class="code-line">$ pm2 logs api <span class="token parameter variable">--err</span> <span class="token parameter variable">--lines</span> <span class="token number">200</span>
+</span><span class="code-line">$ pm2 report
+</span></code></pre>
+</div></div></div></div></div><div class="wrap h2body-not-exist"><div class="wrap-header h2wrap"><h2 id="参考资料"><a aria-hidden="true" tabindex="-1" href="#参考资料"><span class="icon icon-link"></span></a>参考资料</h2><div class="wrap-body">
+<ul>
+<li><a href="https://pm2.keymetrics.io/docs/usage/quick-start/">PM2 Quick Start</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/process-management/">PM2 Process Management</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/application-declaration/">PM2 Ecosystem File</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/cluster-mode/">PM2 Cluster Mode</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/log-management/">PM2 Logs</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/restart-strategies/">PM2 Restart Strategies</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/startup/">PM2 Startup Script</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/environment/">PM2 Environment Variables</a></li>
+</ul>
+</div></div><div class="h2wrap-body"></div></div></div><script src="https://giscus.app/client.js" data-repo="jaywcjlove/reference" data-repo-id="R_kgDOID2-Mw" data-category="Q&#x26;A" data-category-id="DIC_kwDOID2-M84CS5wo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async></script><div class="giscus"></div></div><footer class="footer-wrap"><footer class="max-container">© 2022 <a href="https://ixjx.github.io/" target="_blank">Shurrik™</a></footer></footer><script async src="https://www.googletagmanager.com/gtag/js?id=G-9MWEWXSDQK"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MWEWXSDQK');</script><script src="../data.js?v=1.11.1" defer></script><script src="../js/fuse.min.js?v=1.11.1" defer></script><script src="../js/main.js?v=1.11.1" defer></script><div id="mysearch"><div class="mysearch-box"><div class="mysearch-input"><div><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><input id="mysearch-input" type="search" placeholder="搜索" autocomplete="off"><div class="mysearch-clear"></div></div><button id="mysearch-close" type="button">搜索</button></div><div class="mysearch-result"><div id="mysearch-menu"></div><div id="mysearch-content"></div></div></div></div></body>
+</html>
