@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" data-color-mode="dark">
+<head>
+<meta charset="utf-8">
+<title>Chown 备忘清单
+ &#x26;  chown cheatsheet &#x26;  Quick Reference</title>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta description="这份快速参考备忘单整理了 chown 修改文件所有者和属组的常用语法、选项、递归行为与安全示例
+
+入门，为开发人员分享快速参考备忘单。">
+<meta keywords="chown,reference,Quick,Reference,cheatsheet,cheat,sheet">
+<meta name="author" content="jaywcjlove">
+<meta name="license" content="MIT">
+<meta name="funding" content="https://jaywcjlove.github.io/#/sponsor">
+<meta rel="apple-touch-icon" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="152x152" href="../icons/touch-icon-ipad.png">
+<meta rel="apple-touch-icon" sizes="180x180" href="../icons/touch-icon-iphone.png">
+<meta rel="apple-touch-icon" sizes="167x167" href="../icons/touch-icon-ipad-retina.png">
+<meta rel="apple-touch-icon" sizes="120x120" href="../icons/touch-icon-iphone-retina.png">
+<link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+<link href="../style/style.css" rel="stylesheet">
+<link href="../style/katex.css" rel="stylesheet">
+</head>
+<body><nav class="header-nav"><div class="max-container"><a href="../index.html" class="logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em">
+  <path d="m21.66 10.44-.98 4.18c-.84 3.61-2.5 5.07-5.62 4.77-.5-.04-1.04-.13-1.62-.27l-1.68-.4c-4.17-.99-5.46-3.05-4.48-7.23l.98-4.19c.2-.85.44-1.59.74-2.2 1.17-2.42 3.16-3.07 6.5-2.28l1.67.39c4.19.98 5.47 3.05 4.49 7.23Z" fill="#c9d1d9"></path>
+  <path d="M15.06 19.39c-.62.42-1.4.77-2.35 1.08l-1.58.52c-3.97 1.28-6.06.21-7.35-3.76L2.5 13.28c-1.28-3.97-.22-6.07 3.75-7.35l1.58-.52c.41-.13.8-.24 1.17-.31-.3.61-.54 1.35-.74 2.2l-.98 4.19c-.98 4.18.31 6.24 4.48 7.23l1.68.4c.58.14 1.12.23 1.62.27Zm2.43-8.88c-.06 0-.12-.01-.19-.02l-4.85-1.23a.75.75 0 0 1 .37-1.45l4.85 1.23a.748.748 0 0 1-.18 1.47Z" fill="#228e6c"></path>
+  <path d="M14.56 13.89c-.06 0-.12-.01-.19-.02l-2.91-.74a.75.75 0 0 1 .37-1.45l2.91.74c.4.1.64.51.54.91-.08.34-.38.56-.72.56Z" fill="#228e6c"></path>
+</svg>
+<span class="title">Quick Reference</span></a><div class="menu"><a href="javascript:void(0);" class="searchbtn" id="searchbtn"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><span>搜索</span><span>⌘K</span></a><a href="https://ixjx.github.io/" class="home" target="__blank"><svg viewBox="0 0 24 24" fill="currentColor" height="1em" width="1em"><path d="M12.74 2.32a1 1 0 0 0-1.48 0l-9 10A1 1 0 0 0 3 14h2v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7h2a1 1 0 0 0 1-1 1 1 0 0 0-.26-.68z"></path></svg><span>Shurrik</span></a><a href="https://github.com/jaywcjlove/reference/blob/main/docs/chown.md" class="edit" target="__blank"><svg viewBox="0 0 36 36" fill="currentColor" height="1em" width="1em"><path d="m33 6.4-3.7-3.7a1.71 1.71 0 0 0-2.36 0L23.65 6H6a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V11.76l3-3a1.67 1.67 0 0 0 0-2.36ZM18.83 20.13l-4.19.93 1-4.15 9.55-9.57 3.23 3.23ZM29.5 9.43 26.27 6.2l1.85-1.85 3.23 3.23Z"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span>编辑</span></a><button id="darkMode" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="light" height="1em" width="1em">
+  <path d="M6.995 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007-2.246-5.007-5.007-5.007S6.995 9.239 6.995 12zM11 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2H2zm17 0h3v2h-3zM5.637 19.778l-1.414-1.414 2.121-2.121 1.414 1.414zM16.242 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.344 7.759 4.223 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"></path>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="dark" height="1em" width="1em">
+  <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"></path>
+</svg>
+</button><script src="../js/dark.js?v=1.11.1"></script><a href="https://github.com/jaywcjlove/reference" class="" target="__blank"><svg viewBox="0 0 16 16" fill="currentColor" height="1em" width="1em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></nav><div class="wrap h1body-exist max-container"><header class="wrap-header h1wrap"><h1 id="chown-备忘清单"><svg viewBox="0 0 1024 1024" version="1.1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="1em" width="1em"><path d="M912.9 130.6c-26.1 4.5-52.8 6.9-80.2 6.9-115.4 0-221.1-41.9-302.6-111.2-10.6-9-26.2-9-36.8 0-81.5 69.4-187.2 111.2-302.6 111.2-27 0-53.5-2.3-79.2-6.7-17.2-2.9-32.9 10.4-33 27.9-0.2 109.1-0.4 238.1-0.4 242.5 0 471 394.5 592.7 431 603 1.8 0.5 3.6 0.5 5.4 0C550.9 994 943 873 945.5 405.7l0.4-247c0-17.6-15.8-31.1-33-28.1zM546 568.9v154.5c0 18.8-15.2 34-34 34s-34-15.2-34-34V568.9c-68.2-15.5-119.1-76.4-119.1-149.3 0-84.5 68.5-153.1 153.1-153.1S665.1 335 665.1 419.6c0 72.9-50.9 133.9-119.1 149.3z"></path></svg><a aria-hidden="true" tabindex="-1" href="#chown-备忘清单"><span class="icon icon-link"></span></a>Chown 备忘清单</h1><div class="wrap-body">
+<p>这份快速参考备忘单整理了 <code>chown</code> 修改文件所有者和属组的常用语法、选项、递归行为与安全示例</p>
+</div></header><div class="menu-tocs"><div class="menu-btn"><svg aria-hidden="true" fill="currentColor" height="1em" width="1em" viewBox="0 0 16 16" version="1.1" data-view-component="true">
+  <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+</svg></div><div class="menu-modal"><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#入门">入门</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#语法">语法</a><a aria-hidden="true" class="leve4 tocs-link" data-num="4" href="#示例">示例</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#所有者与属组">所有者与属组</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#常用选项">常用选项</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#符号链接">符号链接</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#常用示例">常用示例</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#修改文件所有者">修改文件所有者</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#同时修改所有者和属组">同时修改所有者和属组</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#只修改属组">只修改属组</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#使用登录属组">使用登录属组</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#递归修改目录">递归修改目录</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#按当前归属条件修改">按当前归属条件修改</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#参照其他文件">参照其他文件</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#修改符号链接本身">修改符号链接本身</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#递归时不遍历符号链接">递归时不遍历符号链接</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#实践">实践</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#web-应用目录">Web 应用目录</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#上传目录">上传目录</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#恢复当前用户归属">恢复当前用户归属</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#避免通配符误伤">避免通配符误伤</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#排错">排错</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#查看当前归属">查看当前归属</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#找出归属不正确的文件">找出归属不正确的文件</a><a aria-hidden="true" class="leve3 tocs-link" data-num="3" href="#批量修复特定归属">批量修复特定归属</a><a aria-hidden="true" class="leve2 tocs-link" data-num="2" href="#另见">另见</a></div></div><div class="h1wrap-body"><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="入门"><a aria-hidden="true" tabindex="-1" href="#入门"><span class="icon icon-link"></span></a>入门</h2><div class="wrap-body">
+<!--rehype:body-class=cols-2-->
+</div></div><div class="h2wrap-body cols-2"><div class="wrap h3body-exist"><div class="wrap-header h3wrap"><h3 id="语法"><a aria-hidden="true" tabindex="-1" href="#语法"><span class="icon icon-link"></span></a>语法</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">chown</span> <span class="token punctuation">[</span>选项<span class="token punctuation">]</span><span class="token punctuation">..</span>. <span class="token punctuation">[</span>所有者<span class="token punctuation">]</span><span class="token punctuation">[</span>:<span class="token punctuation">[</span>属组<span class="token punctuation">]</span><span class="token punctuation">]</span> 文件<span class="token punctuation">..</span>.
+</span><span class="code-line">$ <span class="token function">chown</span> <span class="token punctuation">[</span>选项<span class="token punctuation">]</span><span class="token punctuation">..</span>. <span class="token parameter variable">--reference</span><span class="token operator">=</span>参考文件 文件<span class="token punctuation">..</span>.
+</span></code></pre>
+<p><code>chown</code> 命令可修改文件或目录的所有者及属组，执行该操作一般需要管理员权限。</p>
+<h4 id="示例"><a aria-hidden="true" tabindex="-1" href="#示例"><span class="icon icon-link"></span></a>示例</h4>
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> alice report.txt
+</span><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> alice:staff report.txt
+</span><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> alice:staff project/
+</span><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">--reference</span><span class="token operator">=</span>template.txt target.txt
+</span></code></pre>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="所有者与属组"><a aria-hidden="true" tabindex="-1" href="#所有者与属组"><span class="icon icon-link"></span></a>所有者与属组</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="show-header left-align"><thead><tr><th align="left">写法</th><th align="left">含义</th></tr></thead><tbody><tr><td align="left"><code>alice</code></td><td align="left">只把所有者改为 <code>alice</code>，属组保持不变</td></tr><tr><td align="left"><code>alice:staff</code></td><td align="left">所有者改为 <code>alice</code>，属组改为 <code>staff</code></td></tr><tr><td align="left"><code>alice:</code></td><td align="left">所有者改为 <code>alice</code>，属组改为 <code>alice</code> 的登录属组</td></tr><tr><td align="left"><code>:staff</code></td><td align="left">只把属组改为 <code>staff</code>，效果类似 <code>chgrp staff</code></td></tr><tr><td align="left"><code>:</code></td><td align="left">不改变所有者或属组</td></tr><tr><td align="left"><code>+1001:+1001</code></td><td align="left">使用数字 UID/GID，<code>+</code> 可避免与同名用户或组混淆</td></tr></tbody></table>
+<!--rehype:className=show-header left-align-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="常用选项"><a aria-hidden="true" tabindex="-1" href="#常用选项"><span class="icon icon-link"></span></a>常用选项</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="show-header left-align"><thead><tr><th align="left">选项</th><th align="left">说明</th></tr></thead><tbody><tr><td align="left"><code>-c</code>, <code>--changes</code></td><td align="left">只在发生变更时输出信息</td></tr><tr><td align="left"><code>-f</code>, <code>--silent</code>, <code>--quiet</code></td><td align="left">抑制大多数错误信息</td></tr><tr><td align="left"><code>-v</code>, <code>--verbose</code></td><td align="left">为每个处理的文件输出诊断信息</td></tr><tr><td align="left"><code>-R</code>, <code>--recursive</code></td><td align="left">递归处理目录及其内容</td></tr><tr><td align="left"><code>--from=当前所有者:当前属组</code></td><td align="left">仅当当前所有者或属组匹配时才修改</td></tr><tr><td align="left"><code>--reference=参考文件</code></td><td align="left">使用参考文件的所有者和属组</td></tr><tr><td align="left"><code>--preserve-root</code></td><td align="left">递归操作 <code>/</code> 时失败，防止误操作根目录</td></tr><tr><td align="left"><code>--no-preserve-root</code></td><td align="left">不对 <code>/</code> 做特殊保护</td></tr><tr><td align="left"><code>--help</code></td><td align="left">显示帮助</td></tr><tr><td align="left"><code>--version</code></td><td align="left">显示版本</td></tr></tbody></table>
+<!--rehype:className=show-header left-align-->
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="符号链接"><a aria-hidden="true" tabindex="-1" href="#符号链接"><span class="icon icon-link"></span></a>符号链接</h3><div class="wrap-body">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="show-header left-align"><thead><tr><th align="left">选项</th><th align="left">说明</th></tr></thead><tbody><tr><td align="left"><code>--dereference</code></td><td align="left">修改符号链接指向的目标，这是默认行为</td></tr><tr><td align="left"><code>-h</code>, <code>--no-dereference</code></td><td align="left">修改符号链接本身，而不是它指向的目标</td></tr><tr><td align="left"><code>-H</code></td><td align="left">与 <code>-R</code> 一起使用；命令行参数中的目录符号链接会被遍历</td></tr><tr><td align="left"><code>-L</code></td><td align="left">与 <code>-R</code> 一起使用；遍历遇到的每个目录符号链接</td></tr><tr><td align="left"><code>-P</code></td><td align="left">与 <code>-R</code> 一起使用；不遍历任何符号链接，GNU 默认值</td></tr></tbody></table>
+<!--rehype:className=show-header left-align-->
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="常用示例"><a aria-hidden="true" tabindex="-1" href="#常用示例"><span class="icon icon-link"></span></a>常用示例</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="修改文件所有者"><a aria-hidden="true" tabindex="-1" href="#修改文件所有者"><span class="icon icon-link"></span></a>修改文件所有者</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> alice report.txt
+</span></code></pre>
+<p>把 <code>report.txt</code> 的所有者改为 <code>alice</code>，文件属组保持不变。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="同时修改所有者和属组"><a aria-hidden="true" tabindex="-1" href="#同时修改所有者和属组"><span class="icon icon-link"></span></a>同时修改所有者和属组</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> alice:staff report.txt
+</span></code></pre>
+<p>把 <code>report.txt</code> 的所有者改为 <code>alice</code>，属组改为 <code>staff</code>。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="只修改属组"><a aria-hidden="true" tabindex="-1" href="#只修改属组"><span class="icon icon-link"></span></a>只修改属组</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> :staff report.txt
+</span></code></pre>
+<p>不改变文件所有者，只把属组改为 <code>staff</code>。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="使用登录属组"><a aria-hidden="true" tabindex="-1" href="#使用登录属组"><span class="icon icon-link"></span></a>使用登录属组</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> alice: report.txt
+</span></code></pre>
+<p>所有者改为 <code>alice</code>，属组改为 <code>alice</code> 的登录属组。</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="递归修改目录"><a aria-hidden="true" tabindex="-1" href="#递归修改目录"><span class="icon icon-link"></span></a>递归修改目录</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> alice:staff project/
+</span></code></pre>
+<p>递归修改 <code>project/</code> 目录及其所有内容的所有者和属组。</p>
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> --preserve-root <span class="token parameter variable">-R</span> alice:staff /srv/app
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>递归处理重要路径时可加 <code>--preserve-root</code>，降低误把根目录作为目标的风险。</p>
+</div></div></div><div class="wrap h3body-not-exist row-span-2"><div class="wrap-header h3wrap"><h3 id="按当前归属条件修改"><a aria-hidden="true" tabindex="-1" href="#按当前归属条件修改"><span class="icon icon-link"></span></a>按当前归属条件修改</h3><div class="wrap-body">
+<!--rehype:wrap-class=row-span-2-->
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">--from</span><span class="token operator">=</span>root:root app:app config.yml
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>只有当 <code>config.yml</code> 当前所有者和属组都是 <code>root</code> 时，才改为 <code>app:app</code>。</p>
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">--from</span><span class="token operator">=</span>:oldgroup :newgroup *.log
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>只要求当前属组匹配 <code>oldgroup</code>，匹配后把属组改为 <code>newgroup</code>。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="参照其他文件"><a aria-hidden="true" tabindex="-1" href="#参照其他文件"><span class="icon icon-link"></span></a>参照其他文件</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">--reference</span><span class="token operator">=</span>template.txt target.txt
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>把 <code>target.txt</code> 的所有者和属组改成与 <code>template.txt</code> 相同。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="修改符号链接本身"><a aria-hidden="true" tabindex="-1" href="#修改符号链接本身"><span class="icon icon-link"></span></a>修改符号链接本身</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-h</span> alice:staff current-link
+</span></code></pre>
+<p>修改符号链接 <code>current-link</code> 自身的所有者和属组，而不是它指向的目标文件。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="递归时不遍历符号链接"><a aria-hidden="true" tabindex="-1" href="#递归时不遍历符号链接"><span class="icon icon-link"></span></a>递归时不遍历符号链接</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> <span class="token parameter variable">-P</span> app:app /srv/app
+</span></code></pre>
+<p><code>-P</code> 会让递归过程不进入符号链接指向的目录，适合多数需要避免越界修改的场景。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="实践"><a aria-hidden="true" tabindex="-1" href="#实践"><span class="icon icon-link"></span></a>实践</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="web-应用目录"><a aria-hidden="true" tabindex="-1" href="#web-应用目录"><span class="icon icon-link"></span></a>Web 应用目录</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> app:app /srv/app
+</span><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> www-data:www-data /var/www/example
+</span></code></pre>
+<p>把应用目录交给运行服务的用户和属组，避免用 <code>root</code> 直接运行应用进程。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="上传目录"><a aria-hidden="true" tabindex="-1" href="#上传目录"><span class="icon icon-link"></span></a>上传目录</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> www-data:www-data /var/www/example/uploads
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>只给需要写入的目录设置 Web 服务用户归属，其他代码目录应尽量保持只读权限。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="恢复当前用户归属"><a aria-hidden="true" tabindex="-1" href="#恢复当前用户归属"><span class="icon icon-link"></span></a>恢复当前用户归属</h3><div class="wrap-body">
+<pre class="wrap-text"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> <span class="token string">"<span class="token environment constant">$USER</span>"</span><span class="token builtin class-name">:</span><span class="token string">"<span class="token environment constant">$USER</span>"</span> ~/.config/my-tool
+</span></code></pre>
+<!--rehype:className=wrap-text-->
+<p>当配置目录被 <code>sudo</code> 创建后，可把它恢复为当前用户拥有。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="避免通配符误伤"><a aria-hidden="true" tabindex="-1" href="#避免通配符误伤"><span class="icon icon-link"></span></a>避免通配符误伤</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> app:app /srv/app/
+</span><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token parameter variable">-R</span> app:app ./
+</span></code></pre>
+<p>递归操作前优先使用明确路径。避免在不确定的工作目录中直接执行 <code>chown -R user:group *</code>。</p>
+</div></div></div></div></div><div class="wrap h2body-exist"><div class="wrap-header h2wrap"><h2 id="排错"><a aria-hidden="true" tabindex="-1" href="#排错"><span class="icon icon-link"></span></a>排错</h2><div class="wrap-body">
+</div></div><div class="h2wrap-body"><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="查看当前归属"><a aria-hidden="true" tabindex="-1" href="#查看当前归属"><span class="icon icon-link"></span></a>查看当前归属</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">ls</span> <span class="token parameter variable">-l</span> report.txt
+</span><span class="code-line">$ <span class="token function">stat</span> report.txt
+</span></code></pre>
+<p><code>ls -l</code> 适合快速查看，<code>stat</code> 会显示更完整的 UID、GID 与文件元数据。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="找出归属不正确的文件"><a aria-hidden="true" tabindex="-1" href="#找出归属不正确的文件"><span class="icon icon-link"></span></a>找出归属不正确的文件</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">find</span> /srv/app <span class="token parameter variable">-not</span> <span class="token parameter variable">-user</span> app <span class="token parameter variable">-ls</span>
+</span><span class="code-line">$ <span class="token function">find</span> /srv/app <span class="token parameter variable">-not</span> <span class="token parameter variable">-group</span> app <span class="token parameter variable">-ls</span>
+</span></code></pre>
+<p>用 <code>find</code> 先列出目标，再决定是否批量修复，能减少递归修改的风险。</p>
+</div></div></div><div class="wrap h3body-not-exist"><div class="wrap-header h3wrap"><h3 id="批量修复特定归属"><a aria-hidden="true" tabindex="-1" href="#批量修复特定归属"><span class="icon icon-link"></span></a>批量修复特定归属</h3><div class="wrap-body">
+<pre class="language-shell"><code class="language-shell code-highlight"><span class="code-line">$ <span class="token function">sudo</span> <span class="token function">find</span> /srv/app <span class="token parameter variable">-user</span> root <span class="token parameter variable">-exec</span> <span class="token function">chown</span> app:app <span class="token punctuation">{</span><span class="token punctuation">}</span> +
+</span></code></pre>
+<p>只修复当前所有者为 <code>root</code> 的文件，避免无差别覆盖整个目录树。</p>
+</div></div></div></div></div><div class="wrap h2body-not-exist"><div class="wrap-header h2wrap"><h2 id="另见"><a aria-hidden="true" tabindex="-1" href="#另见"><span class="icon icon-link"></span></a>另见</h2><div class="wrap-body">
+<ul>
+<li><a href="https://www.gnu.org/s/coreutils/manual/html_node/chown-invocation.html">GNU Coreutils: chown invocation</a></li>
+<li><a href="https://www.gnu.org/software/coreutils/manual/html_node/File-permissions.html">GNU Coreutils: File permissions</a></li>
+</ul>
+</div></div><div class="h2wrap-body"></div></div></div><script src="https://giscus.app/client.js" data-repo="jaywcjlove/reference" data-repo-id="R_kgDOID2-Mw" data-category="Q&#x26;A" data-category-id="DIC_kwDOID2-M84CS5wo" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async></script><div class="giscus"></div></div><footer class="footer-wrap"><footer class="max-container">© 2022 <a href="https://ixjx.github.io/" target="_blank">Shurrik™</a></footer></footer><script async src="https://www.googletagmanager.com/gtag/js?id=G-9MWEWXSDQK"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MWEWXSDQK');</script><script src="../data.js?v=1.11.1" defer></script><script src="../js/fuse.min.js?v=1.11.1" defer></script><script src="../js/main.js?v=1.11.1" defer></script><div id="mysearch"><div class="mysearch-box"><div class="mysearch-input"><div><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 0 18 18">
+  <path fill="currentColor" d="M17.71,16.29 L14.31,12.9 C15.4069846,11.5024547 16.0022094,9.77665502 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 C9.77665502,16.0022094 11.5024547,15.4069846 12.9,14.31 L16.29,17.71 C16.4777666,17.8993127 16.7333625,18.0057983 17,18.0057983 C17.2666375,18.0057983 17.5222334,17.8993127 17.71,17.71 C17.8993127,17.5222334 18.0057983,17.2666375 18.0057983,17 C18.0057983,16.7333625 17.8993127,16.4777666 17.71,16.29 Z M2,8 C2,4.6862915 4.6862915,2 8,2 C11.3137085,2 14,4.6862915 14,8 C14,11.3137085 11.3137085,14 8,14 C4.6862915,14 2,11.3137085 2,8 Z"></path>
+</svg><input id="mysearch-input" type="search" placeholder="搜索" autocomplete="off"><div class="mysearch-clear"></div></div><button id="mysearch-close" type="button">搜索</button></div><div class="mysearch-result"><div id="mysearch-menu"></div><div id="mysearch-content"></div></div></div></div></body>
+</html>
